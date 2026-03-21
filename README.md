@@ -15,7 +15,25 @@ spend-analyzer/
 └── README.md
 ```
 
-## Run locally
+## Run with Docker (recommended — one command)
+
+From the `spend-analyzer` folder (where `docker-compose.yml` lives):
+
+```bash
+docker compose up --build
+```
+
+- **Web UI:** http://localhost:8080  
+- **API:** http://localhost:8000  
+- **API docs:** http://localhost:8000/docs  
+
+The SQLite database is stored in a Docker volume (`spend_db`) so data persists across restarts.
+
+To stop: `Ctrl+C` or `docker compose down`.
+
+---
+
+## Run locally (without Docker)
 
 ### Backend
 

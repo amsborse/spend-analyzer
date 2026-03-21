@@ -1,25 +1,39 @@
-# Spend Analyzer — development environment
-# Usage: docker compose up
-# TODO: Add services for API, PostgreSQL, and web when Docker setup is implemented.
+# Spend Analyzer — one command runs API + web UI
+# Usage: docker compose up --build
+#   UI: http://localhost:8080  (port 8080 avoids needing admin on Windows for :80)
+#   API: http://localhost:8000
+#   API docs: http://localhost:8000/docs
 
-version: "3.9"
 services:
-  # api:
-  #   build: ./backend
-  #   ports: ["8000:8000"]
-  #   environment:
-  #     DATABASE_URL: postgresql://user:pass@db:5432/spend
-  #   depends_on: [db]
-  # db:
-  #   image: postgres:16-alpine
-  #   environment:
-  #     POSTGRES_USER: user
-  #     POSTGRES_PASSWORD: pass
-  #     POSTGRES_DB: spend
-  #   volumes: [pgdata:/var/lib/postgresql/data]
-  # web:
-  #   build: ./frontend
-  #   ports: ["5173:5173"]
-  #   depends_on: [api]
-# volumes:
-#   pgdata:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      SPEND_DATA_DIR: /data
+    volumes:
+      - spend_db:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Browser calls this from your machine (not container-to-container)
+        VITE_API_URL: http://localhost:8000
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  spend_db:

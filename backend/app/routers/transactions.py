@@ -6,7 +6,7 @@ from app.core.csv_parser import parse_csv
 from app.core.merchant_normalizer import normalize as normalize_merchant
 from app.core.categorizer import categorize
 
-router = APIRouter(prefix="/", tags=["transactions"])
+router = APIRouter(tags=["transactions"])
 
 
 def _build_transactions_query(

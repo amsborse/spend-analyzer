@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import "./App.css";
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const CHART_COLORS = ["#0d9488", "#0ea5e9", "#8b5cf6", "#f59e0b", "#ef4444", "#10b981", "#6366f1", "#ec4899"];
 

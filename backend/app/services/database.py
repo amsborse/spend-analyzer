@@ -1,7 +1,10 @@
+import os
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent.parent.parent / "spend.db"
+# In Docker, set SPEND_DATA_DIR=/data and mount a volume for persistence
+_data_dir = Path(os.environ.get("SPEND_DATA_DIR", str(Path(__file__).resolve().parent.parent.parent)))
+DB_PATH = _data_dir / "spend.db"
 
 # Design doc schema: id, date, merchant_raw, merchant_normalized, description, amount, currency, category, source, created_at
 SCHEMA = """
